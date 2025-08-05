@@ -721,7 +721,7 @@ function routeReview(state: typeof PlanExecuteState.State) {
 app.post('/agent/run', (req, res) => {
   try {
     // Immediately send a temporary response to the client
-    res.status(202).json({ message: 'Request received. Agent is processing in the background.' });
+    res.status(200).json({ message: 'Request received. Agent is processing in the background.' });
 
     // Start the agent logic in the background
     (async () => {
@@ -855,6 +855,8 @@ app.post('/agent/webhook', async (req, res) => {
   const noderedBaseUrl = 'https://eager-stallion-super.ngrok-free.app';
 
       try {
+
+        console.log('the wen hook has been trigered')
 
     const response = await fetch(`${noderedBaseUrl}/agent2/webhook`, {
         method: 'POST',
