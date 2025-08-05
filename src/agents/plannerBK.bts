@@ -1,0 +1,138 @@
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { ChatOllama } from "@langchain/ollama";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { scanFolderTool, scanFolderFunc } from "../tools/scan-folder";
+import { readFileTool } from "../tools/read-file";
+import  { writeFileTool } from "../tools/write-file"
+import { backupFileTool } from "../tools/backup-file";
+import { backupFolderTool } from "../tools/backup-folder";
+import { restoreFileTool } from "../tools/restore-file";
+import { restoreFolderTool } from "../tools/restore-folder";
+import { cloneRepoTool } from "../tools/clone-repo";
+
+import { planFunction } from '../tools/task-planner';
+
+import { planTool } from '../tools/task-planner';
+import path from "path";
+
+
+
+// const plannerPrompt = ChatPromptTemplate.fromTemplate(
+//   `For the given objective, come up with a simple step by step plan. \
+// This plan should involve individual tasks, that if executed correctly will yield the correct answer. Do not add any superfluous steps. \
+// The result of the final step should be the final answer. Make sure that each step has all the information needed - do not skip steps.
+
+// {objective}`,
+// );
+
+const pFolder = process.env.PROJECT_FOLDER || './cloned-repos/repo-1752490288521';
+
+const CLONE_BASE = './cloned-repos';
+
+const timestamp = Date.now();
+
+const projectPath = path.join(CLONE_BASE, `repo-${1752490288521}`);
+
+
+// const fullPath = path.resolve(pFolder);
+
+const fileFunc = async () => {
+  return await scanFolderFunc(projectPath);
+}
+
+// const filess = async (fp) => await scanFolderFunc(projectPath);
+fileFunc().then(filess => {
+  console.log('FILES:', filess);
+});
+// const filess = fileFunc();
+// console.log('JSOS--' , filess);
+
+// const plannerPrompt = ChatPromptTemplate.fromTemplate(
+//   `For the given objective. An application built in angular version 16, a penetration test was conducted on the hosted application and vulnerabilities were raised.\
+//   come up with a step-by-step plan.\
+//   Return your response as a valid JSON array where each step has the format:
+
+// {{
+//   "step": <number>,
+//   "action": <string>,
+//   "file": <string>
+// }}
+
+// step refers to the serial number or index of the step
+// action refers to that needs to be taken on the file
+// file refers to the file path of the file or directory that the action needs to be taken on
+
+// Do not include any extra commentary. Only output JSON.
+ 
+// Objective:
+// {objective}`
+// );
+
+
+const plannerPrompt = ChatPromptTemplate.fromTemplate(
+  `For the given objective. An application built in angular version 16, a penetration test was conducted on the hosted application and vulnerabilities were raised.\
+  These are the files in the project : ${filess}, come up with a step-by-step plan on how to fix the vulnerabilities and specify which of the files need t be updated.\
+  Return your response as a valid JSON array where each step has the format:
+
+{{
+  "step": <number>,
+  "action": <string>,
+  "file": <string>
+}}
+
+step refers to the serial number or index of the step
+action refers to that needs to be taken on the file
+file refers to the file path of the file or directory that the action needs to be taken on
+
+Do not include any extra commentary. Only output JSON.
+
+Objective:
+{objective}`
+);
+
+
+
+// Initialize the model
+// const llm = new ChatOllama({
+//   model: "llama3.1:8b",
+//   temperature: 0,
+//   maxRetries: 2
+// }).withStructuredOutput(planFunction);
+
+const llm = new ChatOllama({
+  model: "llama3.1:8b",
+  temperature: 0,
+  maxRetries: 2
+});
+
+// const tools = [
+//   cloneRepoTool,
+//   backupFolderTool,
+//   scanFolderTool,
+//   backupFileTool,
+//   readFileTool,
+//   writeFileTool,
+//   restoreFolderTool,
+//   restoreFileTool
+// ];
+
+// const llmWithTools = llm.bindTools(tools);
+ 
+const plannerModel = createReactAgent({
+      llm,
+      tools: [ 
+               cloneRepoTool,
+               backupFolderTool, 
+               scanFolderTool,
+               backupFileTool, 
+               readFileTool,
+               writeFileTool,
+               restoreFolderTool,
+               restoreFileTool,
+               
+               planTool
+              
+            ]
+    });
+
+export const plannerAgent = plannerPrompt.pipe(plannerModel);

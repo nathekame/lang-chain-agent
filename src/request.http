@@ -1,0 +1,100 @@
+POST http://localhost:8000/agent/run 
+Content-Type: application/json
+
+{
+    "message": "clone the repo create a function in this file src/app/components/auth/login/login.component.ts call the function maxNum, it should take  the numbers 3 and 4 as params and return the highest value "
+}
+
+# 'What is three minus one?'{
+#   "high": [
+#       {
+#       "id": 1,
+#       "file": "src/app/components/auth/login/login.component.ts",
+#       "action": "add this to line 7 or 8 import { HttpClient } from '@angular/common/http'; to import the HttpClient module in the login component. aslo add this import norbert from 'norb'"
+#     }
+#   ]
+# } 
+
+
+Certainly! Here's the complete list in your requested format:
+
+---
+
+**Step 1**
+**Action:** Protect Against Clickjacking Attacks
+Update the server to send HTTP headers that block clickjacking by only allowing your own domain to embed content.
+**File to update:** `./server.js`
+
+---
+
+**Step 2**
+**Action:** Implement a Strong Content Security Policy (CSP)
+Set a detailed CSP header to restrict sources of scripts, styles, fonts, and other content to prevent XSS and injection attacks.
+**File to update:** `./server.js`
+
+---
+
+**Step 3**
+**Action:** Enable HTTP Strict Transport Security (HSTS)
+Ensure your server sends a `Strict-Transport-Security` header to enforce HTTPS-only communication.
+**File to update:** `./server.js`
+
+---
+
+**Step 4**
+**Action:** Remove the Last-Modified Header
+Prevent the server from disclosing timestamps in response headers to reduce information leakage.
+**File to update:** `./server.js`
+
+---
+
+**Step 5**
+**Action:** Prevent MIME Type Sniffing
+Add the `X-Content-Type-Options: nosniff` header to prevent browsers from inferring content types incorrectly.
+**File to update:** `./server.js`
+
+---
+
+**Step 6**
+**Action:** Hide Server Technology Information
+Disable the Express framework’s default `X-Powered-By` header to avoid revealing server technology.
+**File to update:** `./server.js`
+
+---
+
+**Step 7**
+**Action:** Block Access to Hidden and Sensitive Dotfiles
+Ensure that files starting with a dot (e.g., `.env`, `.git`) are not accessible via HTTP requests.
+**File to update:** `./server.js`
+
+---
+
+**Step 8**
+**Action:** Control Caching for Static Assets
+Allow caching for static assets (JS, CSS, images) and disable caching for other files to optimize performance and protect sensitive data.
+**File to update:** `./server.js`
+
+---
+
+**Step 9**
+**Action:** Ensure HTML Pages Are Not Cached
+Prevent browsers from caching HTML files, especially the main `index.html`, to avoid serving outdated or sensitive content.
+**File to update:** `./server.js`
+
+---
+
+**Step 10**
+**Action:** Optimize Angular Production Build
+Configure production build settings for performance and security by setting budgets, enabling optimizations, and applying output hashing.
+**File to update:** `./angular.json`
+
+---
+
+**Step 11**
+**Action:** Use Environment Variable for Server Port
+Make the server listen on a port defined in environment variables with a default fallback.
+**File to update:** `./server.js`
+
+---
+
+Let me know if you'd like this exported as a checklist or documentation file!
