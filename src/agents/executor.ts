@@ -115,32 +115,47 @@ const tools = [
 
 const systemPrompt = ChatPromptTemplate.fromTemplate(
   `
-As a code execution agent with access to tools for file scanning, reading, anchor-editing, file appending, writing, backup, restoration, and command execution. 
-Follow instructions carefully and use tools only when necessary.
+  
+   With the task you are given you must perform the action to take
+  
+      action: Is a description of what you are to do
+      action_to_take: Is the action typically running a command or writing to a file
+      file: Is the absolute path to the file that you need to perform the action on
+  
+      ***Use the write tool to write all changes into the destination file***      
 
-**Guidelines**:
+  `
+)
 
-If a file needs to be updated:
-- Use the **search file** tool to locate the file.
-- Use the **backup file** tool to create a backup before making any changes.
-- Use the **read file** tool to inspect the current contents.
-- Generate the updated version of the file, including all required changes.
-- Use the **write file** tool to overwrite the file with the new content.
 
-If a command needs to be executed, use the **run command** tool in the project root directory.
+// const systemPrompt = ChatPromptTemplate.fromTemplate(
+//   `
+// As a code execution agent with access to tools for file scanning, reading, anchor-editing, file appending, writing, backup, restoration, and command execution. 
+// Follow instructions carefully and use tools only when necessary.
 
-You are working on an **Angular project**, so it's safe to run Angular-specific commands like \`ng serve\` and \`ng build\`, as well as common \`npm\` commands. Python is not required in this context.
+// **Guidelines**:
 
-**Output Format** (return strictly in this structure):
-\`\`\`json
-{
-  "problem": "<The instruction or issue being addressed. Leave empty if none.>",
-  "action_taken": "<The action performed, if any. Leave empty if none.>",
-  "file": "<The file that was modified or read, if applicable. Leave empty if none.>"
-}
-\`\`\`
-`
-);
+// If a file needs to be updated:
+// - Use the **search file** tool to locate the file.
+// - Use the **backup file** tool to create a backup before making any changes.
+// - Use the **read file** tool to inspect the current contents.
+// - Generate the updated version of the file, including all required changes.
+// - Use the **write file** tool to overwrite the file with the new content.
+
+// If a command needs to be executed, use the **run command** tool in the project root directory.
+
+// You are working on an **Angular project**, so it's safe to run Angular-specific commands like \`ng serve\` and \`ng build\`, as well as common \`npm\` commands. Python is not required in this context.
+
+// **Output Format** (return strictly in this structure):
+// \`\`\`json
+// {
+//   "problem": "<The instruction or issue being addressed. Leave empty if none.>",
+//   "action_taken": "<The action performed, if any. Leave empty if none.>",
+//   "file": "<The file that was modified or read, if applicable. Leave empty if none.>"
+// }
+// \`\`\`
+// `
+// );
 
 
 const llmWithTools = llm.bindTools(tools).bind({ prompt: systemPrompt });
